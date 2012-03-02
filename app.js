@@ -29,8 +29,12 @@ io.sockets.on('connection',function(socket){
 	//socket.emit('news',{numPeople: numPeople});
 	socket.on('user.moved', function(data){
 		socket.get('user.id',function(err,uid){
-			users[uid].mouse = data.mouse;
-			socket.broadcast.emit('user/moved',users[uid]);
+			if(users[uid] !== undefined){
+				users[uid].mouse = data.mouse;
+				console.log("data.touches: "+data.touches);
+				users[uid].touches = data.touches; //might be undefined, no promises
+				socket.broadcast.emit('user/moved',users[uid]);
+			}
 		});
 	});
 

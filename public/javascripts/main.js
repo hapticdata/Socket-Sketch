@@ -1,11 +1,13 @@
 require([
 	'jquery',
-	'domReady'
-],function($, domReady){
+	'domReady',
+	'sketch',
+],function($, domReady, sketch){
 	domReady(function(){
 		
+		var sketchInstance = sketch.create(document.getElementById('sketch'));
 		var user = {};
-		var socket = io.connect('http://192.168.1.105:3000');
+		var socket = io.connect(window.location);
 		var	addBox = function(user){
 			$('body').append(getNewBox(user));
 			moveBox(user);
@@ -27,6 +29,7 @@ require([
 				left: user.mouse.x,
 				top: user.mouse.y
 			});
+			sketchInstance.add(user);
 		};
 
 		socket.on('connect',function(data){
@@ -61,17 +64,28 @@ require([
 
 		$(window).mousemove(function(e){
 			user.mouse = {x: e.pageX, y: e.pageY};
-			socket.emit('user.moved', user);
+			//socket.emit('user.moved', user);
 			moveBox(user);
 		});
 
-		if(window.ontouchmove){
-			window.ontouchmove = function(e){
-				e.preventDefault();
-				user.mouse = {x: e.touches[0].pageX, y: e.touches[0].pageY};
-				socket.emit('user.moved',user);
-				moveBox(user);
+		
+		document.addEventListener('touchmove',function(e){
+			e.preventDefault();
+			user.touches = [];
+			for(var i=0; i< e.touches.length; i++){
+				user.touches.push({x: e.touches[i].pageX, y: e.touches[i].pageY});
 			}
-		}
+			user.mouse = user.touches[0];
+			socket.emit('user.moved',user);
+			moveBox(user);
+		}, false);
+
+		document.addEventListener('touchstart',function(e){
+			e.preventDefault();
+		}, false);
+
+		document.addEventListener('touchend', function(e){
+
+		}, false);
 	});
 });
