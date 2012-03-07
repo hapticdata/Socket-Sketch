@@ -5,6 +5,13 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+.box {
+	width: 10px;
+	height: 10px;
+	overflow: hidden;
+	background-color: rgba(0,0,0,0.5);
+}
+
 a {
   color: #00B7FF;
 }

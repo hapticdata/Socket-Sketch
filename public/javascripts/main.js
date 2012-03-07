@@ -16,7 +16,7 @@ require([
 			$('#'+uid).remove();	
 		}
 		,	getNewBox = function(user){
-			return $('<div id="'+user.id+'">'+user.id+'</div>').css({
+			return $('<div class="box" id="'+user.id+'">&nbsp;</div>').css({
 				position: 'absolute',
 				width: 20,
 				height: 20,
